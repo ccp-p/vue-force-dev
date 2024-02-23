@@ -4,7 +4,7 @@
 
   // Light up my extension icon
   window.addEventListener("message", (e) => {
-    if (e.source === window && e.data.vueDetected) {
+    if (e.source === window && e.data.message?.vueDetected) {
       chrome.runtime.sendMessage(e.data);
     }
   });
@@ -19,8 +19,8 @@
     const messageHandler = (e) => {
       try {
         if (!window.__VUE_DEVTOOLS_GLOBAL_HOOK__) return;
-        if (e.source === window && e.data.vueDetected) {
-          const data = e.data;
+        if (e.source === window && e.data.message?.vueDetected) {
+          const data = e.data?.message;
           // skip
           if (data.devtoolsEnabled) {
             window.removeEventListener("message", messageHandler);
@@ -112,7 +112,9 @@
       const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
       Vue.config.devtools = true;
       devtools.emit("init", Vue);
-
+      Vue && (Vue.prototype.$inspect = function() {
+        Vue && Vue(devtools)
+    })
       return true;
     }
 
