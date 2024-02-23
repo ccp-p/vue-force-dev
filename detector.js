@@ -112,8 +112,12 @@
       const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
       Vue.config.devtools = true;
       devtools.emit("init", Vue);
+      devtools.Vue = Vue;
+
       Vue && (Vue.prototype.$inspect = function() {
-        Vue && Vue(devtools)
+        const t = 'init'.__VUE_DEVTOOLS_INSPECT__;
+          
+        t && t(devtools)
     })
       return true;
     }
